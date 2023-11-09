@@ -9,6 +9,11 @@ namespace VV.Algorithm.RPN;
 /// </summary>
 internal class PrepareInputHandler : InputHandler
 {
+    internal PrepareInputHandler(bool isResetNeeded = true) : base(isResetNeeded)
+    {
+    
+    }
+    
     /// <summary>
     /// Handles the input by applying necessary formatting transformations (removing whitespace, replacing brackets with parentheses,
     /// converting commas to decimal points, and replacing unary minus with tilde).
@@ -39,6 +44,8 @@ internal class PrepareInputHandler : InputHandler
             }
         }
 
-        return nextHandler?.Handle(preparedInput.Trim()) ?? preparedInput.Trim();
+        var result = preparedInput.Trim();
+
+        return base.Handle(result);
     }
 }

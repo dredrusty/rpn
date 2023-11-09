@@ -7,6 +7,11 @@ namespace VV.Algorithm.RPN;
 /// </summary>
 internal class ToOutputPostfixHandler : InputHandler
 {
+    internal ToOutputPostfixHandler(bool isResetNeeded = true) : base(isResetNeeded)
+    {
+    
+    }
+
     /// <summary>
     /// Handles the input by converting it into Postfix (Reverse Polish Notation) form.
     /// </summary>
@@ -96,6 +101,8 @@ internal class ToOutputPostfixHandler : InputHandler
         foreach (string operators in stack)
             outputPostfix.Append(operators).Append(' ');
 
-        return nextHandler?.Handle(outputPostfix.ToString().Trim()) ?? outputPostfix.ToString().Trim();
+        var result = outputPostfix.ToString().Trim();
+
+        return base.Handle(result);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
+﻿
 namespace VV.Algorithm.RPN;
 
 /// <summary>
@@ -7,19 +6,19 @@ namespace VV.Algorithm.RPN;
 /// Provides methods for working with the input expression: <see cref="PrepareExpression(string)"/>, <see cref="ValidateExpression(string)"/>, <see cref="ExpressionToPostfix(string)"/>, <see cref="CalculateExpression(string)"/>.
 /// Methods call handlers that implement the Chain of Responsibility pattern.
 /// </summary>
-public class ReversePolishNotation
+public sealed class ReversePolishNotation
 {
     /// <summary>
     /// Represents the delegate for handling events related to evaluating expressions in Reverse Polish Notation (RPN).
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">An instance of <see cref="EventArgsEvaluateRPN"/> containing event data.</param>
-    public delegate void ReversePolishNotationEventHandler(object sender, EventArgsEvaluateRPN e);
+    /// <param name="e">An instance of <see cref="EventArgsInCalculate"/> containing event data.</param>
+    public delegate void ReversePolishNotationEventHandler(object sender, EventArgsInCalculate e);
 
     /// <summary>
-    /// Occurs when a calculation step is performed during the evaluation of an expression in Reverse Polish Notation (RPN).
+    /// Occurs when a calculation step is performed in <see cref="CalculatePostfixHandler"/> during the evaluation of an expression in Reverse Polish Notation (RPN).
     /// </summary>
-    public event ReversePolishNotationEventHandler? OnCalculate;
+    public event ReversePolishNotationEventHandler? OnCalculateIteration;
 
     /// <summary>
     /// A dictionary that associates operators and functions with their precedence levels, used for parsing expressions.
@@ -38,11 +37,13 @@ public class ReversePolishNotation
         { ")", 6 },
     };
 
+    private readonly object lockProceed = new (); 
+
     // Instances of handler classes, that implements interface IInputHandler, for various stages of expression processing.
-    internal readonly PrepareInputHandler prepare = new();
-    internal readonly ValidateInputHandler validate = new();
-    internal readonly ToOutputPostfixHandler postfix = new();
-    internal readonly CalculatePostfixHandler calc = new();
+    internal readonly PrepareInputHandler prepare = new(isResetNeeded : true);
+    internal readonly ValidateInputHandler validate = new(isResetNeeded: true);
+    internal readonly ToOutputPostfixHandler postfix = new(isResetNeeded: true);
+    internal readonly CalculatePostfixHandler calc = new(isResetNeeded: true);
 
     /// <summary>
     /// Initializes a new instance of the ReversePolishNotation class.
@@ -61,7 +62,10 @@ public class ReversePolishNotation
     /// <returns>Prepared expression as string for further processing.</returns>
     public string PrepareExpression(string expression)
     {
-        return prepare.Handle(expression);
+        lock (lockProceed)
+        { 
+            return prepare.Handle(expression); 
+        }     
     }
 
     /// <summary>
@@ -73,11 +77,15 @@ public class ReversePolishNotation
     /// <returns>Returns true if the expression is validated; otherwise, it throws an <see cref="ArgumentException"/>.</returns>
     public bool ValidateExpression(string expression)
     {
-        prepare.SetNext(validate);
+        lock (lockProceed)
+        {
+            prepare
+            .SetNext(validate);
 
-        prepare.Handle(expression);
-        
-        return true;  
+            prepare.Handle(expression);
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -88,9 +96,14 @@ public class ReversePolishNotation
     /// <returns>The input expression in Reverse Polish Notation as a string for further processing.</returns>
     public string ExpressionToPostfix(string expression)
     {
-        prepare.SetNext(validate).SetNext(postfix);
+        lock (lockProceed)
+        {
+            prepare
+            .SetNext(validate)
+            .SetNext(postfix);
 
-        return prepare.Handle(expression);
+            return prepare.Handle(expression);
+        }       
     }
 
     /// <summary>
@@ -101,13 +114,19 @@ public class ReversePolishNotation
     /// <returns>The result of the calculated expression as a string.</returns>
     public string CalculateExpression(string expression)
     {
-        calc.OnCalculateStep += (sender, e) => 
+        lock (lockProceed)
         {
-            OnCalculate?.Invoke(sender, e); 
-        };
-        
-        prepare.SetNext(validate).SetNext(postfix).SetNext(calc);
+            calc.OnCalculateStep += (sender, e) =>
+            {
+                OnCalculateIteration?.Invoke(sender, e);
+            };
 
-        return prepare.Handle(expression);
+            prepare
+            .SetNext(validate)
+            .SetNext(postfix)
+            .SetNext(calc);
+
+            return prepare.Handle(expression);
+        }        
     }
 }

@@ -18,6 +18,11 @@ internal interface IInputHandler
     /// Handles the input data, processing it based on the implementation's logic.
     /// </summary>
     /// <param name="input">The input data to be processed.</param>
-    /// <returns>The result of the processing, typically transformed or validated data.</returns>
+    /// <returns>The result of the processing, typically transformed, validated or calculated data.</returns>
     internal string Handle(string input);
+
+    /// <summary>
+    /// Resets the state of the input handler.
+    /// </summary>
+    internal void Reset();
 }

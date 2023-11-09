@@ -16,12 +16,12 @@ public class EventArgsEvaluateRPNTests
         List<string> triggerMethod = new();
 
         //Act
-        rpn.OnCalculate += (s, e) =>
+        rpn.OnCalculateIteration += (s, e) =>
         {
-            mathOperators.Add(e.MathOperator!);
-            first.Add(e.FirstOperand.ToString());
-            second.Add(e.SecondOperand.ToString());
-            triggerMethod.Add(e.TriggerMethod!);
+            mathOperators.Add(e.OperationInfo.MathOperator!);
+            first.Add(e.OperationInfo.FirstOperand.ToString());
+            second.Add(e.OperationInfo.SecondOperand.ToString());
+            triggerMethod.Add(e.OperationInfo.TriggerMethod!);
         };
 
         rpn.CalculateExpression(expression);

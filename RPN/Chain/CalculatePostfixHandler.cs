@@ -14,8 +14,8 @@ internal class CalculatePostfixHandler : InputHandler
     /// Represents a delegate for handling events related to evaluating expressions in Reverse Polish Notation (RPN).
     /// </summary>
     /// <param name="sender">The source of the event.</param>
-    /// <param name="e">An instance of <see cref="EventArgsEvaluateRPN"/> containing event data.</param>
-    internal delegate void CalculateStepHandler(object sender, EventArgsEvaluateRPN e);
+    /// <param name="e">An instance of <see cref="EventArgsInCalculate"/> containing event data.</param>
+    internal delegate void CalculateStepHandler(object sender, EventArgsInCalculate e);
 
     /// <summary>
     /// Occurs when a calculation step is performed during the evaluation of an RPN expression.
@@ -26,6 +26,11 @@ internal class CalculatePostfixHandler : InputHandler
     /// A set containing unary operators.
     /// </summary>
     internal readonly static HashSet<string> unaryOperators = new() { "~", "sin", "cos" };
+
+    internal CalculatePostfixHandler(bool isResetNeeded = true) : base(isResetNeeded)
+    {
+    
+    }
 
     /// <summary>
     /// Handles the calculation of an RPN expression.
@@ -56,7 +61,7 @@ internal class CalculatePostfixHandler : InputHandler
 
                     stack.Push(EvaluateReversePolishNotation.EvaluateUn(evaluate[i], first));
 
-                    OnCalculateStep?.Invoke(this, new EventArgsEvaluateRPN(evaluate[i], first));
+                    OnCalculateStep?.Invoke(this, new EventArgsInCalculate(evaluate[i], first));
                 }
                 else
                 {
@@ -69,11 +74,13 @@ internal class CalculatePostfixHandler : InputHandler
 
                     stack.Push(EvaluateReversePolishNotation.EvaluateBin(evaluate[i], first, second));
 
-                    OnCalculateStep?.Invoke(this, new EventArgsEvaluateRPN(evaluate[i], first, second));
+                    OnCalculateStep?.Invoke(this, new EventArgsInCalculate(evaluate[i], first, second));
                 }
             }
         }
 
-        return nextHandler?.Handle(stack.Pop().ToString()) ?? stack.Pop().ToString();
+        var result = stack.Pop().ToString();
+
+        return base.Handle(result);
     }
 }

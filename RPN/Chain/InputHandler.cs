@@ -7,6 +7,16 @@
 internal abstract class InputHandler : IInputHandler
 {
     internal IInputHandler? nextHandler;
+    protected bool IsResetNeeded { get; init; }
+
+    /// <summary>
+    /// Initializes a new instance of the InputHandler class with an option to indicate whether a reset is needed after handling.
+    /// </summary>
+    /// <param name="isResetNeeded">True if a reset is needed; otherwise, false.</param>
+    internal InputHandler(bool isResetNeeded)
+    {
+        IsResetNeeded = isResetNeeded;
+    }
 
     /// <summary>
     /// Sets the next handler in the chain.
@@ -20,9 +30,27 @@ internal abstract class InputHandler : IInputHandler
     }
 
     /// <summary>
-    /// Handles the input data according to the specific implementation of the handler.
+    /// Determines whether to pass the input data to the next handler or return the input data itself.
+    /// Then calls the <see cref="Reset"/> operation, breaking the chain of calls.
+    /// The actual processing of the input data occurs in the Handle methods of derived classes.
     /// </summary>
     /// <param name="input">The input data to be processed.</param>
     /// <returns>The result of processing the input data, which may be passed to the next handler.</returns>
-    public abstract string Handle(string input);
+    public virtual string Handle(string input)
+    {
+        var result = nextHandler?.Handle(input) ?? input;
+
+        if (IsResetNeeded)
+            Reset();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Resets the state of the input handler, breaking the chain of responsibility by nullifying the reference to the next handler.
+    /// </summary>
+    public void Reset()
+    {
+        nextHandler = null;
+    }
 }

@@ -9,11 +9,16 @@ namespace VV.Algorithm.RPN;
 /// </summary>
 internal class ValidateInputHandler : InputHandler
 {
+    internal ValidateInputHandler(bool isResetNeeded = true) : base (isResetNeeded)
+    {
+    
+    }
+
     /// <summary>
     /// Gets the regular expression pattern to validate the input expression.
     /// </summary>
     /// <returns>A regular expression pattern for validation.</returns>
-    internal static string GetRegexPattern()
+    private static string GetRegexPattern()
     {
         int xOrMore = 2;
 
@@ -35,7 +40,7 @@ internal class ValidateInputHandler : InputHandler
     /// and consecutive sequences of operators and functions.
     /// </summary>
     /// <param name="input">The input expression to validate.</param>
-    /// <returns>The validated input expression.</returns>
+    /// <returns>The validated input expression for further processing.</returns>
     public override string Handle(string input)
     {
         var inputToValidate = input;
@@ -63,6 +68,6 @@ internal class ValidateInputHandler : InputHandler
         if (regex.IsMatch(inputToValidate))
             throw new ArgumentException(RPNRes.ValidateInputIncorrectCharacters, nameof(input));
 
-        return nextHandler?.Handle(inputToValidate) ?? inputToValidate;
+        return base.Handle(inputToValidate);
     }
 }
