@@ -36,7 +36,7 @@ public class EventArgsEvaluateRPNTests
     public static IEnumerable<object[]> CalculatePostfixRisesOnCalculateStep_Data =>
         new List<object[]>
         {
-            new object[] { "10*12,8412", new List<string> {"*"}, new List<string> {"10" }, new List<string> {"12,8412" }, new List<string> {"Handle"}  },
+            new object[] { "10*12,8412", new List<string> {"*"}, new List<string> {"10" }, new List<string> {12.8412.ToString() }, new List<string> {"Handle"}  },
             new object[] { "10/(5-3)", new List<string> {"-", "/" }, new List<string> { "5", "10" }, new List<string> { "3", "2" }, new List<string>{ "Handle", "Handle" } },
         };
 }
