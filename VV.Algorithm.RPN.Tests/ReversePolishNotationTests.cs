@@ -1,5 +1,6 @@
 using Xunit;
 using VV.Algorithm.RPN.Resources;
+using System.Globalization;
 
 namespace VV.Algorithm.RPN;
 
@@ -91,7 +92,7 @@ public class ReversePolishNotationTests
 
     [Theory]
     [MemberData(nameof(CalculateExpressionReturnsCorrectResult_Data))]
-    public void CalculateExpressionReturnsCorrectResult(string expression, string expected)
+    public void CalculateExpressionReturnsCorrectResult(string expression, double expected)
     {
         //Arrange
         var rpn = new ReversePolishNotation();
@@ -100,7 +101,7 @@ public class ReversePolishNotationTests
         var result = rpn.CalculateExpression(expression);
 
         //Assert
-        Assert.Equal(result, expected);
+        Assert.Equal(result, expected.ToString());
     }
 
     [Theory]
@@ -166,10 +167,10 @@ public class ReversePolishNotationTests
     public static IEnumerable<object[]> CalculateExpressionReturnsCorrectResult_Data =>
         new List<object[]>
         {
-            new object[] { "10*(-15+19)*sin(90)-5^12.8412", "-945395657,7878376" },
-            new object[] { "-5-6*(8+6*3)/(5^5.8)+sin(8)", "-4,024416974316647" },
-            new object[] { "(5+16)^3-sin(cos(45))+14.254", "9274,752508396681" },
-            new object[] { "sin(80)/cos(35)+5.4/(-12+7)^3", "1,0566088157933546" },
+            new object[] { "10*(-15+19)*sin(90)-5^12.8412", -945395657.7878376 },
+            new object[] { "-5-6*(8+6*3)/(5^5.8)+sin(8)", -4.024416974316647 },
+            new object[] { "(5+16)^3-sin(cos(45))+14.254", 9274.7525083966812 },
+            new object[] { "sin(80)/cos(35)+5.4/(-12+7)^3", 1.0566088157933546 },
         };
 
     public static IEnumerable<object[]> CalculateExpressionThrowArgumentExceptionWhenDivisionByZero_Data =>
