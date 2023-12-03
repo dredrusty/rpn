@@ -7,7 +7,7 @@ namespace VV.Algorithm.RPN;
 /// Responsible for preparing input expressions by removing whitespace, replacing brackets with parentheses,
 /// converting commas to decimal points, and replacing unary minus with tilde.
 /// </summary>
-internal class PrepareInputHandler : InputHandler
+internal class PrepareInputHandler : InputHandler<string, string>
 {
     internal PrepareInputHandler(bool isResetNeeded = true) : base(isResetNeeded)
     {

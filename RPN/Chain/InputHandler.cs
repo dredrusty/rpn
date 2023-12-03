@@ -4,7 +4,7 @@
 /// Base class representing an input handler in a chain of responsibility.
 /// It provides the structure for handling input data and linking to the next handler in the chain.
 /// </summary>
-internal abstract class InputHandler : IInputHandler
+internal abstract class InputHandler<T,V> : IInputHandler<T,V>
 {
     internal IInputHandler? nextHandler;
     protected bool IsResetNeeded { get; init; }
@@ -23,7 +23,7 @@ internal abstract class InputHandler : IInputHandler
     /// </summary>
     /// <param name="handler">The next input handler to be linked in the chain.</param>
     /// <returns>The provided input handler, for chaining.</returns>
-    public IInputHandler SetNext(IInputHandler handler)
+    public IInputHandler<K,T> SetNext<K>(IInputHandler<K,T> handler)
     {
         nextHandler = handler;
         return handler;
@@ -36,14 +36,14 @@ internal abstract class InputHandler : IInputHandler
     /// </summary>
     /// <param name="input">The input data to be processed.</param>
     /// <returns>The result of processing the input data, which may be passed to the next handler.</returns>
-    public virtual string Handle(string input)
+    public virtual T Handle(V input)
     {
         var result = nextHandler?.Handle(input) ?? input;
 
         if (IsResetNeeded)
             Reset();
 
-        return result;
+        return (T)result;
     }
 
     /// <summary>
