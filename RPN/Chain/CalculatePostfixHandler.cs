@@ -59,9 +59,11 @@ internal class CalculatePostfixHandler : InputHandler
                 {
                     first = stack.Count > 0 ? stack.Pop() : 0;
 
-                    stack.Push(EvaluateReversePolishNotation.EvaluateUn(evaluate[i], first));
+                    var stepResult = EvaluateReversePolishNotation.EvaluateUn(evaluate[i], first);
 
-                    OnCalculateStep?.Invoke(this, new EventArgsInCalculate(evaluate[i], first));
+                    stack.Push(stepResult);
+
+                    OnCalculateStep?.Invoke(this, new EventArgsInCalculate(evaluate[i], first, stepResult));
                 }
                 else
                 {
@@ -72,9 +74,11 @@ internal class CalculatePostfixHandler : InputHandler
 
                     first = stack.Count > 0 ? stack.Pop() : 0;
 
-                    stack.Push(EvaluateReversePolishNotation.EvaluateBin(evaluate[i], first, second));
+                    var stepResult = EvaluateReversePolishNotation.EvaluateBin(evaluate[i], first, second);
 
-                    OnCalculateStep?.Invoke(this, new EventArgsInCalculate(evaluate[i], first, second));
+                    stack.Push(stepResult);
+
+                    OnCalculateStep?.Invoke(this, new EventArgsInCalculate(evaluate[i], first, second, stepResult));
                 }
             }
         }
