@@ -50,7 +50,10 @@ public sealed class ReversePolishNotation
     /// </summary>
     public ReversePolishNotation()
     {
-
+        calc.OnCalculateStep += (sender, e) =>
+        {
+            OnCalculateIteration?.Invoke(sender, e);
+        };
     }
 
     /// <summary>
@@ -116,11 +119,6 @@ public sealed class ReversePolishNotation
     {
         lock (lockProceed)
         {
-            calc.OnCalculateStep += (sender, e) =>
-            {
-                OnCalculateIteration?.Invoke(sender, e);
-            };
-
             prepare
             .SetNext(validate)
             .SetNext(postfix)
