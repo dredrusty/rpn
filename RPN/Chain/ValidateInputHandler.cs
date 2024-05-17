@@ -29,10 +29,12 @@ internal class ValidateInputHandler : InputHandler
         var functions = ReversePolishNotation.Priority.Where(pair => pair.Value < 6 && pair.Key.Length > 2).Select(pair => $@"{pair.Key}").ToList();
 
         string maskOperators = "[" + string.Join("", operators) + "]";
-
+        
         string maskFunctions = "(" + string.Join("|", functions) + ")";
 
-        return new($@"{maskOperators}{{{xOrMore},}}|{maskFunctions}{{{xOrMore},}}");
+        string maskDecimalPoint = "(\\d+\\.\\.\\d+)|(\\d+\\.+\\d+\\.+\\d+)"; 
+
+        return new($@"{maskOperators}{{{xOrMore},}}|{maskFunctions}{{{xOrMore},}}|{maskDecimalPoint}");
     }
 
     /// <summary>
