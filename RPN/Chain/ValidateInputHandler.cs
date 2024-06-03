@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using VV.Algorithm.RPN.Resources;
 
 namespace VV.Algorithm.RPN;
@@ -7,7 +8,7 @@ namespace VV.Algorithm.RPN;
 /// Handles validation of the input expression. This includes checking for unmatched parentheses, 
 /// disallowing consecutive sequences of mathematical operators and functions, and ensuring valid characters.
 /// </summary>
-internal class ValidateInputHandler : InputHandler
+internal class ValidateInputHandler : InputHandler<string, string>
 {
     internal ValidateInputHandler(bool isResetNeeded = true) : base (isResetNeeded)
     {

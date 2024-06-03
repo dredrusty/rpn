@@ -5,7 +5,7 @@ namespace VV.Algorithm.RPN;
 /// <summary>
 /// Handles converting an input expression into its corresponding Postfix (Reverse Polish Notation) form.
 /// </summary>
-internal class ToOutputPostfixHandler : InputHandler
+internal class ToOutputPostfixHandler : InputHandler<string, string>
 {
     internal ToOutputPostfixHandler(bool isResetNeeded = true) : base(isResetNeeded)
     {

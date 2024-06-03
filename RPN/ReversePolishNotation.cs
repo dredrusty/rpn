@@ -115,7 +115,7 @@ public sealed class ReversePolishNotation
     /// </summary>
     /// <param name="expression">Input expression as a string that should be prepared, validated, converted to Reverse Polish Notation and calculated.</param>
     /// <returns>The result of the calculated expression as a string.</returns>
-    public string CalculateExpression(string expression)
+    public double CalculateExpression(string expression)
     {
         lock (lockProceed)
         {
@@ -124,7 +124,9 @@ public sealed class ReversePolishNotation
             .SetNext(postfix)
             .SetNext(calc);
 
-            return prepare.Handle(expression);
+            var result =  prepare.Handle(expression);
+
+            return Convert.ToDouble(result);
         }        
     }
 }

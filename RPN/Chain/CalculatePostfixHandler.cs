@@ -8,7 +8,7 @@ namespace VV.Algorithm.RPN;
 /// It handles the evaluation of RPN expressions, supporting binary and unary operators, including standard mathematical functions.
 /// Also rises even <see cref="OnCalculateStep"/> after evaluation every step.
 /// </summary>
-internal class CalculatePostfixHandler : InputHandler
+internal class CalculatePostfixHandler : InputHandler <double, string>
 {
     /// <summary>
     /// Represents a delegate for handling events related to evaluating expressions in Reverse Polish Notation (RPN).
@@ -37,7 +37,7 @@ internal class CalculatePostfixHandler : InputHandler
     /// </summary>
     /// <param name="input">The input expression in RPN format.</param>
     /// <returns>The result of the RPN expression calculation.</returns>
-    public override string Handle(string input)
+    public override double Handle(string input)
     {
         var toEvaluate = input;
 
