@@ -6,8 +6,6 @@
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=style-flat&logo=c-sharp&logoColor=white)
 
 
-
-
 # Reverse Polish Notation (RPN)
 This project provides a robust implementation for evaluating mathematical expressions using Reverse Polish Notation (RPN). The solution includes classes for parsing, validating, converting, and calculating RPN expressions, with event handling for each calculation step.
 
