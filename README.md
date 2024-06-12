@@ -28,6 +28,8 @@ This version supports the following mathematical operations and functions:
 - **Unary Operators:** ~ (unary minus).
 - **Functions:** sin, cos.
 
+Parentheses precedence is taken into account.
+
 ## Usage
 To use this library, create an instance of ReversePolishNotation and call its methods to prepare, validate, convert, and calculate expressions.
 ```csharp
